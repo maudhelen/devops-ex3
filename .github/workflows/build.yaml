@@ -11,9 +11,6 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-        run:
-            working-directory: ./devops-ex3
     steps:
     # checkout the repo
     - name: 'Checkout Github Action'
