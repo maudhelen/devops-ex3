@@ -5,7 +5,7 @@ name: Linux_Container_Node_Workflow
 env:
     IMAGE_NAME: 'flask-demo'
     IMAGE_VERSION: 'latest'
-    CONTAINER_REGISTRY: 'maudhelencontaineregistry.azurecr.io'
+    CONTAINER_REGISTRY: 'maudhelencontaineregistry'
 
 jobs:
   build-and-deploy:
@@ -22,14 +22,13 @@ jobs:
 
     - uses: azure/docker-login@v1
       with:
-        login-server: contoso.azurecr.io
+        login-server: ${{env.CONTAINER_REGISTRY}}.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
-        docker login ${{env.CONTAINER_REGISTRY}}.azurecr.io -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
-        docker build . -t ${{env.CONTAINER_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-        docker push ${{env.CONTAINER_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+        docker build . -t ${{env.CONTAINER_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+        docker push ${{env.CONTAINER_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
 
     - uses: azure/webapps-deploy@v2
       with:
