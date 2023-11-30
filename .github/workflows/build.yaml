@@ -42,5 +42,5 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
-        app-name: ${{ env.WEB_APP_NAME }}}
+        app-name: ${{ env.WEB_APP_NAME }}
         images: '${{ env.CONTAINER_LOGIN_SERVER_URL }}/${{env.CONTAINER_LOGIN_SERVER_URL}}.azurecr.io/${{env.WEB_APP_NAME}}:${{ steps.image-version.outputs.version }}'
