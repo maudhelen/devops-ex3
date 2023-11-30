@@ -27,6 +27,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
+        docker login ${{env.CONTAINER_REGISTRY}}.azurecr.io -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
         docker build . -t ${{env.CONTAINER_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
         docker push ${{env.CONTAINER_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
 
