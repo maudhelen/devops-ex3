@@ -5,10 +5,7 @@ env:
     WEB_APP_NAME: 'maudhelen-appservice'
     CONTAINER_LOGIN_SERVER_URL: 'maudhelencontaineregistry.azurecr.io'
 
-on:
-  push:
-    branches:
-      - main
+on: [push, workflow_dispatch]
 
 jobs:
   build-and-deploy:
