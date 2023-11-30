@@ -37,5 +37,5 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
-        app-name: mdrummondWebApp
+        app-name: ${{ vars.WEB_APP_NAME }}
         images: '${{ secrets.DOCKER_REGISTRY_SERVER_URL }}/${{secrets.CONTAINER_REGISTRY_IMAGE_NAME}}:${{ steps.image-version.outputs.version }}'
