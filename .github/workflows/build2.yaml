@@ -2,7 +2,7 @@ name: Deploy App to containerized web app
 on: [push, workflow_dispatch]
 
 env:
-    APP_NAME: 'flask-demo'
+    IMAGE_NAME: flask-demo
 
 jobs:
   build-and-deploy:
@@ -29,10 +29,10 @@ jobs:
     
     - name: 'Build and push image'
       run: |
-        docker build . -t ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ steps.image-version.outputs.version }}
-        docker push ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ steps.image-version.outputs.version }}
+        docker build . -t ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{env.IMAGE_NAME}}:${{ steps.image-version.outputs.version }}
+        docker push ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{env.IMAGE_NAME}}:${{ steps.image-version.outputs.version }}
 
     - uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ vars.WEB_APP_NAME }}
-        images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{vars.IMAGE_BASE_NAME}}:${{ github.sha }}'
+        images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{env.IMAGE_NAME}}:${{ github.sha }}'
