@@ -1,0 +1,38 @@
+on: [push]
+
+name: Deploy App to containerized web app
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout the repo
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@main
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{vars.WEB_APP_NAME}}.azurecr.io
+        username: ${{ secrets.DOCKER_REGISTRY_SERVER_USERNAME }}
+        password: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
+    
+    - name: 'Set image version'
+      id: image-version
+      run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/heads/})-$(date +'%Y.%m.%d.%H.%M')"
+    
+    - name: 'Build and push image'
+      run: |
+        docker build . -t ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ steps.image-version.outputs.version }}
+        docker build . -t ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ github.ref_name }}-latest
+        docker push ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ steps.image-version.outputs.version }}
+        docker push ${{ vars.DOCKER_REGISTRY_SERVER_URL }}/${{vars.IMAGE_BASE_NAME}}:${{ github.ref_name }}-latest
+
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'maudhelens app'
+        images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{vars.WEB_APP_NAME}}:${{ github.sha }}'
