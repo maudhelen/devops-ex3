@@ -1,4 +1,4 @@
-on: [push]
+on: [push, workflow_dispatch]
 
 name: Deploy App to containerized web app
 
@@ -17,13 +17,13 @@ jobs:
     
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{vars.WEB_APP_NAME}}.azurecr.io
+        login-server: ${{vars.DOCKER_REGISTRY_SERVER_URL}}
         username: ${{ secrets.DOCKER_REGISTRY_SERVER_USERNAME }}
         password: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
     
-    - name: 'Set image version'
+    - name: Set output
       id: image-version
-      run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/heads/})-$(date +'%Y.%m.%d.%H.%M')"
+      run: echo "version=$(date +'%Y.%m.%d.%H.%M')" >> $GITHUB_ENV
     
     - name: 'Build and push image'
       run: |
@@ -34,5 +34,5 @@ jobs:
 
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'maudhelens app'
+        app-name: 'maudhelenApp'
         images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{vars.WEB_APP_NAME}}:${{ github.sha }}'
