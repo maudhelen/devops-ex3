@@ -1,6 +1,9 @@
 name: Deploy App to containerized web app
 on: [push, workflow_dispatch]
 
+env:
+    APP_NAME: 'flask-demo'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -32,4 +35,4 @@ jobs:
     - uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ vars.WEB_APP_NAME }}
-        images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{vars.WEB_APP_NAME}}:${{ github.sha }}'
+        images: '${{vars.DOCKER_REGISTRY_SERVER_URL}}/${{vars.IMAGE_BASE_NAME}}:${{ github.sha }}'
