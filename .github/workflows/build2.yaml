@@ -6,7 +6,7 @@ env:
     KEY_VAULT_SECRET_NAME_ACR_USERNAME: 'acr-username'
     KEY_VAULT_SECRET_NAME_ACR_PASSWORD: 'acr-password1'
     KEY_VAULT_NAME: 'maudhelen-keyvault'
-    REGISTRY_LOGIN_SERVER: 'maudhelen.azurecr.io'
+    REGISTRY_LOGIN_SERVER: 'maudhelencontaineregistry.azurecr.io'
 
 jobs:
   build-and-deploy:
